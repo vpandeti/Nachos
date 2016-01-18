@@ -1,0 +1,94 @@
+                          NACHOS-USB
+
+                        Eugene W. Stark
+                        SUNY at Stony Brook
+
+NACHOS was originally written by Prof. Tom Anderson at UC Berkeley.
+About 1998, a translation into Java was made by Prof. Peter Druschel
+of Rice University.  Druschel's translation attempted to preserve
+the traditional structure and simplicity of the original NACHOS, and
+for this reason I decided to use it, rather than the current Berkeley
+Java version which seems to have diverged significantly.  After using
+Druschel's version in SUNY Stony Brook course CSE 306 in Spring 2003,
+I decided that it made sense to reorganize and rewrite parts of the
+code to make it more object-oriented, and to make it more like a Java
+program rather than a C program that had been translated into Java.
+I also wanted to separate the machine emulation from the kernel code
+and to make it possible to distribute the machine as a JAR file,
+rather than as source code.  This was not because I wanted to make the
+machine emulation secret, but rather because having the emulation code
+easily available in source form tended to get students confused about
+which parts of the code they were supposed to read and modify and
+which parts they were supposed to leave alone.  Yet another goal for
+the rewrite was to reorganize some things that I found awkward to explain
+to students, and to make them more like the way I would naturally
+expect a real operating system to be.
+
+This code represents a rewrite I did during the summer of 2003, with
+further rewriting and bug fixes during the fall semester of 2004.
+Though I have still tried to keep the traditional NACHOS structure,
+I have made extensive use of packages to try to make it possible for
+students to look at smaller amounts of the code at once and to make
+the code more compatible with the Java way of doing things.  The machine
+emulation is now in package nachos.machine, which is distributed in
+a JAR file.  The kernel code that students are supposed to understand
+and feel free to modify is in package nachos.kernel and its subpackages.
+As it is impossible to build a "from_scratch" threads implementation
+on top of Java, it is necessary to follow Druschel's approach and
+build "NACHOS threads" on top of Java threads.  This is my main regret
+about the Java version, because students don't get to see how threads
+are really implemented "under the covers" as they did with the
+original C++ version.  I found that students got confused by the
+use of Java threads to implement NACHOS threads, so in this version I
+decided to hide the details with the machine emulation.  Thus, the
+NACHOS machine provides NACHOS threads as primitive.  The NachosThread
+class provided by the machine is extended in the kernel by the UserThread
+class, which represents threads that are capable of executing in user
+mode.
+
+Besides the reorganization, I added a GUI-based console device that
+can interrupt on each keypress.  I also added Javadoc comments for nearly
+everything, while trying to keep the text of Anderson's original comments
+where they still made sense.
+
+ADDENDUM: January 2014
+
+During the 2013-2014 winter break from classes, I again rewrote a significant
+amount of the "guts" of this code.  My objectives this time were: (1) to try to
+make the code more object-oriented and more idiomatic as far as Java is
+concerned; (2) to try to make the simulation more realistic as far as
+multi-threaded programming is concerned; and (3) to make the "hardware"
+structure a little bit more flexible to provide new and different opportunities
+for student extensions.  In addressing (2) and (3), I decided to try to make
+the new version of Nachos support multiple CPUs, in such a way that if the
+simulator were run on modern multi-core hardware, then Nachos threads running
+one separate CPUs in the simulator would actually be able to run on separate
+CPUs on the underlying hardware.  I was hoping that the single-CPU case would
+retain the deterministic behavior of the original Nachos, which simplifies
+the debugging process for students, but that the multi-CPU case would provide
+realistic exercising of synchronization code.  I have found over the years that,
+although I try to make students aware of the difficulties of multi-threaded
+programming and the need for careful attention to synchronization, that many
+of them just don't "get it" and ignore synchronization completely in the
+code that they submit.  Nachos itself has promoted this to some extent, because
+of the fact that code running in the kernel could only be pre-empted when
+synchronization primitives are used.  With the multi-CPU version of Nachos,
+this will no longer be the case: since kernel threads will in fact be running
+truly concurrently, it will simply not be possible to ignore synchronization
+and have the code work properly.
+
+The support of multiple CPUs turned out to be a little more complicated than
+I had anticipated, with the simulator now itself becoming a fairly complex
+multi-threaded program.  I wasn't quite sure at the beginning exactly how to
+organize it, but after iterating over several weeks I think I have arrived
+at a design that is reasonably simple and robust.  In the process of writing
+and debugging this version, since I found myself rewriting a lot of the code
+anyway, and I also needed more organized and understandable execution traces
+than the original Nachos produced, I was fairly liberal about refactoring the
+code and changing some of the traditional behavior.  It has been difficult,
+but I have tried to resist the temptation to add additional structure and
+features to the code that are not necessary for the base version, because in
+my view one of the strengths of the original Nachos project is that it
+provides just enough to demonstrate the functioning of the "hardware" and
+leaves the rest of the design to the students' imaginations.
+

@@ -1,0 +1,49 @@
+OUTPUT_FORMAT("ecoff-littlemips")
+ENTRY(__start)
+
+MEMORY {
+ code : ORIGIN = 0x00000000, LENGTH = 1024M
+ data : ORIGIN = 0x40000000, LENGTH = 1024M
+}
+
+SECTIONS
+{
+  .text  0 : {
+     _ftext = . ;
+    *(.init)
+     eprol  =  .;
+    *(.text)
+    *(.fini)
+     etext  =  .;
+     _etext  =  .;
+  } >code
+
+  .rdata . : {
+	  *(.rdata)
+  } >code
+
+  .data 0x40000000 : {
+    _fdata = .;
+    *(.data)
+    *(.sdata)
+    CONSTRUCTORS
+  } >data
+
+  _gp = ALIGN(16);
+  edata  =  .;
+  _edata  =  .;
+
+  _fbss = .;
+  .sbss  . : {
+    *(.sbss)
+    *(.scommon)
+  } >data
+
+  .bss  . : {
+    *(.bss)
+    *(COMMON)
+  } >data
+
+  end = .;
+  _end = .;
+}

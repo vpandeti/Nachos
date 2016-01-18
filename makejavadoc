@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Uncomment the following if Windows is being used.
+CLASSPATH=.\;machine.jar
+
+# Uncomment the following if Unix is being used.
+#CLASSPATH=.:machine.jar
+
+# Build "external" documentation for the machine package.
+#javadoc -d doc/machine \
+#	-doctitle "Nachos-SBU Machine Documentation" \
+#	-windowtitle "Nachos-SBU Machine Documentation" \
+#	-sourcepath "." -classpath "." \
+#	-public \
+#	nachos.machine \
+#	nachos.noff
+
+# Build "internal" documentation for everything but the machine package.
+javadoc	-d doc/kernel $MACHINE -classpath $CLASSPATH -sourcepath "." \
+	-doctitle "Nachos-SBU Kernel Documentation" \
+	-windowtitle "Nachos-SBU Kernel Documentation" \
+	-private \
+        nachos \
+	nachos.kernel \
+	nachos.kernel.devices \
+	nachos.kernel.devices.test \
+	nachos.kernel.filesys \
+	nachos.kernel.filesys.test \
+	nachos.kernel.threads \
+	nachos.kernel.threads.test \
+	nachos.kernel.userprog \
+	nachos.kernel.userprog.test \
+	nachos.util
+

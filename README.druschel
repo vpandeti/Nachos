@@ -1,0 +1,100 @@
+                  Some Notes about Nachos-Java
+
+			Peter Druschel
+         		Rice University
+
+This document focuses on the differences between Nachos-Java and the
+original verison of Nachos as distributed by the UC Berkeley, which is
+written in C++.  The reader should refer to the UC Berkeley
+distribution for full documentation.
+
+In Nachos-Java, the Nachos kernel is written entirely in Java. User
+programs continue to be written in C/C++.
+
+In general, we have made every effort to preserve the structure of the
+C++ version to simplify the transition and to preserve, as much as
+possible, the value of the existing Nachos documentation (e.g., the
+roadmap). You will find many of the same classes and methods in the
+Java version. However, there are some deviations that were necessary
+due to differences between C++ and the Java language.
+
+
+Here are some of the most important differences:
+
+(1) In Java, there are no functions and all execution must
+take place in the body of a class's method. So, you will find that
+many functions in the C++ version have become methods of a class.
+
+(2) There are no function or method pointers in Java. Instead, you
+will find that objects that implement a certain abstract interface are
+used in the Java version. For instance, when creating a new Nachos
+thread in the C++ version, you specify a function pointer and argument
+to be invoked by the new thread. In the Java version, an object
+instance of a class that implements the "Runnable" interface is
+specified instead. The new thread invokes the "run()" method of that
+object. Any parameters can be specified in the object's instance
+variables.
+
+(3) To allow the Java compiler to automatically track dependencies
+among source files and recompile all sources that have been modified,
+it is necessary to place each class definition into a separate source
+file that goes by the Class name, with the ".java" suffix added. (The
+only exception is that class definitions can be added to another
+class's source file, if those classes are never used or referenced by
+classes defined in other source files.)  This has caused some changes
+in the names of source files as compared to the C++ version. However,
+this change has the added benefit of improved readability.
+
+(4) Unlike C++, Java is a concurrent language that already has support
+for threads and synchronization. However, to preserve the Nachos
+threads model and its style of synchronization primitives, we have
+implemented those facilities on top of native Java threads. VERY
+IMPORTANT NOTICE: You must always use Nachos threads and Nachos
+synchronization primitives when writing Nachos-Java
+code. Instantiating native Java threads and invoking native Java
+thread methods on Nachos threads may lead to unexpected results! Also,
+you must not use the "wait" and "notify" methods of the Object class,
+or the "synchronized" keyword and statement when writing Nachos code;
+instead, always use the Nachos-style Lock and Conditions classes to do
+your synchronization.
+
+
+Other differences:
+
+Nachos-Java currently does not support the networking stuff
+(Assignment 5).
+
+Nachos-Java reads its executable files directly from the Unix
+filesystem. As a result, Nachos-Java continues to read executables
+from the Unix filesystem, even when the "Stub" filesystem is replaced
+by a "Real" Nachos filesystem.
+
+
+
+Sun Java Development Kit (jdk)
+
+Nachos-Java was designed and tested using the Sun Java Development
+Kit. We recommend that you use version 1.1.6 of the jdk. The location
+of the jdk must be configured in the files code/threads/Makefile and
+code/threads/nachos. On Rice's owlnet, the appropriate path is
+/usr/site/jdk-1.1.6/bin/.
+
+(Versions of the jdk earlier than 1.1.6 may have problems with memory
+leaks and may experience segfaults in the Java runtime during garbage
+collection. Later versions (jdk-1.2) provide significantly better
+performance, but as of Spring 1999, jdk-1.2 was not yet stable enough
+to support Nachos-Java reliably. Running some of the stress tests
+caused bogus runtime errors and even segfaults of the Java runtime.)
+
+To compile Nachos, go to nachos-java/code/threads and type "make". All
+sources in the code tree will be recompiled as needed.
+
+To run Nachos, go to the threads directory and type "nachos
+<arguments>".  The arguments are the same as in the C++ version.
+
+To use the Java debugger, you need to set the CLASSPATH environment
+variable appropriately. In csh, for instance, do
+
+setenv CLASSPATH .:../machine:../filesys:../userprog:../threads:../vm
+
+Then, invoke the debugger as "jdb Nachos <arguments>".

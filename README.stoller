@@ -1,0 +1,19 @@
+			      NACHOS-SBU                      January 2006
+
+			    Scott Stoller
+			 Stony Brook University
+
+This is a slightly modified version of Gene Stark's nachos.  The main
+changes are:
+
+  Networking.  This version supports the nachos network.  For details,
+  see machine/Network.java, kernel/devices/NetworkDriver.java, and
+  kernel/devices/test.NetworkTest.java.  Some of the code is adapted
+  from Berkeley's Java version of nachos.
+
+  Distributed Filesystem (DFS) project.  kernel/filesys/Message.java
+  is included to help students get started on the DFS project.
+
+  Time limit.  Nachos will kill itself after a while, so runaway
+  nachos processes won't consume excessive amounts of CPU time.
+

@@ -1,0 +1,74 @@
+Name: 		Venkateswara Prasad, Pandeti
+Student Id: 110396994
+Professor:	Eugene, Stark
+Cousre:		CSE 306
+Homework:   HW2
+
+System calls implementation:
+----------------------------
+Prior to the explanation of various system calls implementation, I have to explain the code that is common to all system calls.
+To enable Nachos work in case of multiprogramming, one to one mapping of virtual and physical pages has to be removed.
+Below are the steps that I followed to accomplish the same.
+1. Created a class PhyscialMemoryManager.java (singleton instance). This class contains the Physical page tracking functionality. When any address space request for a physical page, it checks if nay page is available. An array of pages has been maintained. For example, if page 1 is already being used, the value at index '1' is 1, if not, the value at '1' is 0. Hence, when a address space requests for a page, it checks for value '0' and returns that index. It also maintains the hash map of process id and address id to fetch corresponding address space for a particular process id.
+2. In Address space, while fetching the physical page, PhysicalMemoryManager.getPage() is called.
+3. In Address space, while reading code and data from the noff executable file, memory is read page by page
+4. When any process is being finished, Paging tracker is destroyed.
+5. If any page is not used, it will be reused.
+
+Following system calls have been implemented:
+--> Exec(): 
+		a. Implementation: 
+			i. Reads register '4' to get the virtual address of the file name. Virtual address will be converted into physical address and read the bytes from the main memory starting from the manipulated physical address.
+			ii. Creates a new user thread with new address space, initializes the registers.
+			iii. Executes the user program by calling CPU.runUserCode().
+		b. How to test: Please see 'exec1.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/exec1'
+			ii. Observe the output: In console window, it prints 'In halt2' and then System exits by calling 'halt()'. Halt call can be observed in eclipse console.
+--> Exit(): 
+		a. Implementation: 
+			i. Reads register '4' to get the status, '0' mean system exits normally.
+			ii. Destroys the address space and physical pages. Memory is released.
+			iii. Process is finished.
+		b. How to test: Please see 'exit1.c' file
+			i. Change the debug/run configuration to '% % ./run -d m -x test/exit1'
+			ii. Observe the output: You can see the console in eclipse for Exception: Syscall and 'Simulation terminating!' lines.
+--> Fork(): 
+		a. Implementation: 
+			i. Reads register '4' to get the virtual address of the function pointer. Virtual address will be converted into physical address and read the bytes from the main memory starting from the manipulated physical address.
+			ii. Creates a new user thread and pass the address space that is cloned from the calling thread's address space. Please see 'clone()' method in address space.
+			iii. Reads the function pointer into MIPS.PCReg and tells the CPU where the next instruction is by reading function pointer + 4 into MIPS.NextPCReg
+			iv. Executes the user program by calling CPU.runUserCode().
+		b. How to test: Please see 'fork.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/fork'
+			ii. Observe the output: In console window, it prints 'In PrintFork' and then System exits by calling 'halt()'. Halt call can be observed in eclipse console.
+			
+--> Yield(): 
+		a. Implementation: 
+			i. Yields the current process by calling Nachos.scheduler.yieldThread().
+			ii. System exits later.
+		b. How to test: Please see 'yield1.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/yield1'
+			ii. Observe the output: In console window in eclipse, it prints 'Yielding the current thread to another thread' and it also calls Exec(halt2), then System exits by calling 'halt()'. In console window you should see 'In halt2', Halt call can be observed in eclipse console.
+--> Join(): 
+		a. Implementation: 
+			i. Reads register '4' to get the virtual address of the instruction. Virtual address will be converted into physical address and read the bytes from the main memory starting from the manipulated physical address.
+			ii. Creates a new process in exec system call as part of the join call and the new process joins with the main process. Semaphore has been used to make the main process wait for the completion of child process.
+			iii. When main process exits child processes also exit.
+		b. How to test: Please see 'join1.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/join1'
+			ii. Observe the output: In console window, it prints 'Timesharing 2' and then the new thread exits.
+--> Write(): 
+		a. Implementation: 
+			i. Reads register '4','5' and '6' to get the virtual address of the buffer where the text that has to be written on the console is stored, length of the text that should be printed and ConsoleOutput id, respectively. Virtual address will be converted into physical address and read the bytes from the main memory starting from the manipulated physical address.
+			ii. Writes on the console using Nachos.consoleDriver.putChar(buffer) method.
+		b. How to test: Please see 'write1.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/write1'
+			ii. Observe the output: In console window, it prints 'A bufA buffer.' and then System exits, You can see the console in eclipse for 'Simulation terminating!'.
+--> read(): 
+		a. Implementation: 
+			i. Reads register '4','5' and '6' to get the virtual address of the buffer to which given input will be stored, length of the input and ConsoleInput id, respectively. Virtual address will be converted into physical address and read the bytes from the main memory starting from the manipulated physical address.
+			ii. Asks the user to give input, using Nachos.consoleDriver.getChar() method.
+			iii. It prints the given input on the console by using write() system call.
+		b. How to test: Please see 'read1.c' file
+			i. Change the debug/run configuration to '% ./run -d m -x test/read1'
+			ii. Observe the output: In console window, give input like 'abcdefghijklmnopqrstuvwxy', it prints 'abcdefghijklmnopqrstuvwxy' and then System exits.

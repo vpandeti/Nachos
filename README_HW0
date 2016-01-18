@@ -1,0 +1,15 @@
+														Nachos
+
+As Nachos has not been in active development for a number of years, and possesses a number of recognized flaws (particularly with regards to portability: Nachos relies on MIPS assembly code, and requires porting to run on x86 architecture), successor projects have been initiated. In 2004, Stanford University created Pintos, a Nachos-inspired system written in C and designed to run on actual x86 hardware. In 2000, Dan Hettena at UC Berkeley ported Nachos to Java as Nachos 5.0j, in an effort to make Nachos more portable, more accessible to undergraduates, and less susceptible to subtle bugs in student code that had in earlier versions often dominated student project development time. Another Java-based version was created by Professor Peter Druschel at Rice University. It was later adapted by Professor Eugene Stark at Stony Brook University in 2003 and applied in the Operating System course. At Graz University of Technology (Austria), a system called SWEB ("Schon wieder ein Betriebssystem") has been implemented and is used to teach operating system principles.
+
+
+Despite the success of Nachos, there are good reasons to believe that it would be more useful in Java:
+1. Java is much simpler than C++. It is not necessary to restrict Nachos to a subset of the language; students can understand the whole language.
+2. Java is type-safe. C++ is not type-safe; it is possible for a C++ program to perform a legal operation (e.g. writing off the end of an array) such that the operation of the program can no longer be described in terms of the C++ language. This turns out to be a major problem; some project groups are unable to debug their projects within the alotted time, primarily because of bugs not at all related to operating systems concepts.
+3. It is much more reasonable to machine-grade a Java project than a C++ project.
+4. Many undergraduate data structures classes, including the one at Berkeley, now use Java, not C++; students know Java well.
+5. Java is relatively portable. Nachos 4.0 uses unportable assembly to support multi-threading. Adding a new target to Nachos 4.0 required writing a bit of additional code for the port.
+
+sources: 
+https://en.wikipedia.org/wiki/Not_Another_Completely_Heuristic_Operating_System
+http://inst.eecs.berkeley.edu/~cs162/sp07/Nachos/walk/walk.html

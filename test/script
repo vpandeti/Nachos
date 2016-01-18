@@ -1,0 +1,33 @@
+OUTPUT_FORMAT("ecoff-littlemips")
+ENTRY(__start)
+SECTIONS
+{
+  .text  0 : {
+    *(.text)
+    _ecode = . ;
+    . = ALIGN(16) ;
+    _frdata = . ;
+    *(.rdata)
+    _etext = . ;
+  }
+
+  . = ALIGN(0x80) ;
+
+  .data ALIGN(16) : {
+    _fdata = . ;
+    *(.data)
+    CONSTRUCTORS
+    _edata = . ;
+  }
+
+  .bss ALIGN(16) : {
+    _fbss = . ;
+    *(.scommon)
+    *(.bss)
+    *(COMMON)
+    _ebss = . ;
+  }
+
+  _end = . ;
+
+}

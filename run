@@ -1,0 +1,6 @@
+# Uncomment the following when running on Windows.
+java -classpath 'machine.jar;.' nachos.kernel.Nachos $*
+
+# Uncomment the following when running on Unix.
+#java -classpath 'machine.jar:.' nachos.kernel.Nachos $*
+

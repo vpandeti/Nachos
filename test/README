@@ -1,0 +1,13 @@
+This directory contains a variety of user programs that might be useful
+for testing the various Nachos subsystems you develop.  Most of these
+test programs were not in the original UC Berkeley C++ version of Nachos,
+but they were present in the Rice U. Java version that I downloaded,
+and I decided to leave them here.
+
+Most of these programs will not work under the base version of Nachos.
+Additionally, due to changes that I made to Nachos and semester-to-semester
+variations in the assignment specifications, some of them might not work
+even after you have implemented related portions of Nachos.  So, you shouldn't
+just try to use these test programs blindly.  Instead, it is best to think
+of them as a source of ideas and a starting point for you in developing your
+own tests.
